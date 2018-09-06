@@ -3,6 +3,9 @@
 # User specific aliases and functions
 
 
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+PATH=$PATH:ANDROID_HOME/platform-tools
+PATH=$PATH:ANDROID_HOME/tools
 export ANDROID_HOME=$HOME/Android/Sdk
 export ANDROID_NDK_ROOT=$HOME/Android/Sdk/ndk-bundle
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools

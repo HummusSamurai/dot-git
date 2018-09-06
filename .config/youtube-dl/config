@@ -1,0 +1,1 @@
+--no-mtime --download-archive ~/.config/youtube-dl/youtube_dl_archive.txt -o "~/Videos/youtube-dl/%(playlist)s/%(title)s.%(ext)s" --all-subs -i --embed-subs -f 'bestvideo[height<=720]+bestaudio/best[height<=720]'

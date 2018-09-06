@@ -15,112 +15,52 @@
 # Track origin/master
 [branch "master"]
     remote = origin
-    merge  = refs/heads/master
+    merge = refs/heads/master
 
 [alias]
     # convenient aliases
-    files  = "!git i-files"
-    lock   = "!git i-filept \"$@\" | sudo xargs chattr +i #"
+    files = !git i-files
+    lock = "!git i-filept \"$@\" | sudo xargs chattr +i #"
     unlock = "!git i-filept \"$@\" | sudo xargs chattr -i #"
-    edit   = "!git i-edit $(git i-filept \"$@\") #"
+    edit = "!git i-edit $(git i-filept \"$@\") #"
 
     profiles = profile ls
-    pf       = profile
+    pf = profile
 
     # internals
-    i-cfg     = "!git --git-dir=\"$GIT_DIR\" "
+    i-cfg = "!git --git-dir=\"$GIT_DIR\" "
 
-    i-sudo    = "!cmd=\"$1\"; shift; "                      \
-                "sudo -E git "                              \
-                "   --git-dir=\"$GIT_DIR\" "                \
-                "   \"$cmd\" \"$@\" #"
+    i-sudo = "!cmd=\"$1\"; shift;                                       sudo -E git                                                  --git-dir=\"$GIT_DIR\"                                    \"$cmd\" \"$@\" #"
 
-    i-pattern = "!printf ' -e \\|%s|!d ' \"$@\" "           \
-                "  | sed -E -e 's/^\\s*//' -e 's/\\s*$//' #"
+    i-pattern = "!printf ' -e \\|%s|!d ' \"$@\"                              | sed -E -e 's/^\\s*//' -e 's/\\s*$//' #"
 
-    i-splitl  = "!export IFS=\"$(printf '\\n\\r')\"; echo \"$*\" #"
+    i-splitl = "!export IFS=\"$(printf '\\n\\r')\"; echo \"$*\" #"
 
-    i-files   = "!if test $# -eq 0; then "                                      \
-                "  lsf='i-cfg ls-files'; "                                      \
-                "else "                                                         \
-                "  lsf='i-cfg ls-files | sed -E $(git i-pattern \"$@\")'; "     \
-                "fi; "                                                          \
-                "cmd=\"( \"; "                                                  \
-                "if [ ! -f \"$GIT_DIR\"/commondir ]; then "                     \
-                "   for p in $(git profiles); do "                              \
-                "     cmd=\"${cmd}git profile $p $lsf; \";"                     \
-                "   done; "                                                     \
-                "else "                                                         \
-                "   cmd=\"( git $lsf; \"; "                                     \
-                "fi; "                                                          \
-                "cmd=\"${cmd}\"')';"                                            \
-                "fmt='$(stat --format \"%A %N\" \"@\" | cut -c 2- )'; "         \
-                "if [ \"$(git config dotfiles.lockFiles)\" = yes ]; then "      \
-                "  fmt='$( (lsattr -d \"@\" 2>/dev/null "                       \
-                "           || echo '----l') | cut -c 5)'\"$fmt\"; "            \
-                "fi; "                                                          \
-                "cd \"$(git rev-parse --show-toplevel)\"; "                     \
-                "eval $cmd | sort | xargs -I@ sh -c \"echo $fmt\"; #"
+    i-files = "!if test $# -eq 0; then                                                         lsf='i-cfg ls-files';                                                       else                                                                            lsf='i-cfg ls-files | sed -E $(git i-pattern \"$@\")';                      fi;                                                                           cmd=\"( \";                                                                   if [ ! -f \"$GIT_DIR\"/commondir ]; then                                         for p in $(git profiles); do                                                    cmd=\"${cmd}git profile $p $lsf; \";                                        done;                                                                      else                                                                             cmd=\"( git $lsf; \";                                                      fi;                                                                           cmd=\"${cmd}\"')';                                                            fmt='$(stat --format \"%A %N\" \"@\" | cut -c 2- )';                          if [ \"$(git config dotfiles.lockFiles)\" = yes ]; then                         fmt='$( (lsattr -d \"@\" 2>/dev/null                                                   || echo '----l') | cut -c 5)'\"$fmt\";                             fi;                                                                           cd \"$(git rev-parse --show-toplevel)\";                                      eval $cmd | sort | xargs -I@ sh -c \"echo $fmt\"; #"
 
 
-    i-filept  = "!worktree=\"$(git rev-parse --show-toplevel)\"; "              \
-                "if test $# -eq 0; then "                                       \
-                "  lsf='i-cfg ls-files "                                        \
-                "    | sed -e \"s|^|$worktree/|g\"'; "                          \
-                "else "                                                         \
-                "  lsf='i-cfg ls-files "                                        \
-                "    | sed $(git i-pattern \"$@\") "                            \
-                "    | sed -e \"s|^|$worktree/|g\"'; "                          \
-                "fi; "                                                          \
-                "cmd=\"( \"; "                                                  \
-                "if [ ! -f \"$GIT_DIR\"/commondir ]; then "                     \
-                "   for p in $(git profiles); do "                              \
-                "     cmd=\"${cmd}git profile $p $lsf; \";"                     \
-                "   done; "                                                     \
-                "else "                                                         \
-                "   cmd=\"( git $lsf; \"; "                                     \
-                "fi; "                                                          \
-                "cmd=\"${cmd}\"')';"                                            \
-                "eval $cmd; #"
+    i-filept = "!worktree=\"$(git rev-parse --show-toplevel)\";                               if test $# -eq 0; then                                                          lsf='i-cfg ls-files                                                             | sed -e \"s|^|$worktree/|g\"';                                           else                                                                            lsf='i-cfg ls-files                                                             | sed $(git i-pattern \"$@\")                                                 | sed -e \"s|^|$worktree/|g\"';                                           fi;                                                                           cmd=\"( \";                                                                   if [ ! -f \"$GIT_DIR\"/commondir ]; then                                         for p in $(git profiles); do                                                    cmd=\"${cmd}git profile $p $lsf; \";                                        done;                                                                      else                                                                             cmd=\"( git $lsf; \";                                                      fi;                                                                           cmd=\"${cmd}\"')';                                                            eval $cmd; #"
 
     i-askpick = "!git i-splitl \"$@\" | cat -n && echo -n 'Pick the one to edit: ' #"
 
-    i-dopick  = "!git i-askpick \"$@\" "                                        \
-                "  && read PICK "                                               \
-                "  && git i-fedit $(git i-splitl \"$@\" | sed -n $PICK'p') #"
+    i-dopick = "!git i-askpick \"$@\"                                                           && read PICK                                                                  && git i-fedit $(git i-splitl \"$@\" | sed -n $PICK'p') #"
 
-    i-locked  = "!lsattr -d \"$1\" 2>/dev/null | grep -E '^....i.*' >/dev/null #"
+    i-locked = "!lsattr -d \"$1\" 2>/dev/null | grep -E '^....i.*' >/dev/null #"
 
-    i-feditlk = "!chattr -i \"$1\"; "                          \
-                "sudo -Eu \"$SUDO_USER\" \"$EDITOR\" \"$1\"; "  \
-                "chattr +i \"$1\" #"
+    i-feditlk = "!chattr -i \"$1\";                                           sudo -Eu \"$SUDO_USER\" \"$EDITOR\" \"$1\";                   chattr +i \"$1\" #"
 
-    i-fedit-l = "!if git i-locked \"$1\"; then "    \
-                "  git i-sudo i-feditlk \"$1\"; "   \
-                "else "                             \
-                "  git i-fedit-n \"$1\"; "          \
-                "fi #"
+    i-fedit-l = "!if git i-locked \"$1\"; then                       git i-sudo i-feditlk \"$1\";                    else                                                git i-fedit-n \"$1\";                           fi #"
 
     i-fedit-n = "!$EDITOR \"$1\" #"
 
-    i-fedit   = "!if [ \"$(git config dotfiles.lockFiles)\" = yes ]; then " \
-                "  git i-fedit-l \"$1\"; "                                  \
-                "else "                                                     \
-                "  git i-fedit-n \"$1\"; "                                  \
-                "fi #"
+    i-fedit = "!if [ \"$(git config dotfiles.lockFiles)\" = yes ]; then                    git i-fedit-l \"$1\";                                                   else                                                                        git i-fedit-n \"$1\";                                                   fi #"
 
-    i-edit    = "!if test $# -eq 1; "                                           \
-                "  then git i-fedit \"$1\"; "                                   \
-                "elif test $# -gt $(git config dotfiles.matchThreshold); then " \
-                "  echo 'Too many dotfiles matching, restrict the pattern.'; "  \
-                "elif test $# -gt 1; then "                                     \
-                "  git i-dopick \"$@\"; "                                       \
-                "fi #"
+    i-edit = "!if test $# -eq 1;                                                              then git i-fedit \"$1\";                                                    elif test $# -gt $(git config dotfiles.matchThreshold); then                    echo 'Too many dotfiles matching, restrict the pattern.';                   elif test $# -gt 1; then                                                        git i-dopick \"$@\";                                                        fi #"
 
 [core]
     repositoryformatversion = 0
     filemode = true
-    excludesFile = "~/.config/dotgit/ignore"
+    excludesFile = ~/.config/dotgit/ignore
 
 [grep]
     lineNumber = true
@@ -131,3 +71,5 @@
 [remote "origin"]
 	url = https://github.com/HummusSamurai/dot-git.git
 	fetch = +refs/heads/*:refs/remotes/origin/*
+[credential]
+	helper = store
