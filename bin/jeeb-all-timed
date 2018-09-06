@@ -1,0 +1,4 @@
+#!/bin/bash
+
+timeout 1h youtube-dl $(< ~/bin/media2dl.list)
+

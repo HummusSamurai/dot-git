@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "$@" >> ~/bin/media2dl.list 
+
+
