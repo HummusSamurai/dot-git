@@ -29,8 +29,8 @@ alias vnaw="watch -n 60 vnstat"
 alias vna="vnstat"
 
 alias godot-git="cd ~/Documents/applikations/godot-git/ ; ./bin/godot.x11.tools.64* ; cd ~"
-alias godot-git-rebase="cd ~/Documents/applikations/godot-git/ ; git pull --rebase upstream master | grep -q -v 'Already up-to-date.' && scons platform=x11 -j 5 use_llvm=yes; ./bin/godot.x11.tools.64* ; cd ~"
-alias godot-git-rebase-clean="cd ~/Documents/applikations/godot-git/ ; git clean -d -x -q -f ; git pull --rebase upstream master ; scons --config=force platform=x11 -j 5 use_llvm=yes; ./bin/godot.x11.tools.64* ; cd ~"
+alias godot-git-rebase="cd ~/Documents/applikations/godot-git/ ; git pull --rebase upstream master | grep -q -v 'Already up-to-date.' && scons platform=x11 -j 5 ; ./bin/godot.x11.tools.64* ; cd ~"
+alias godot-git-rebase-clean="cd ~/Documents/applikations/godot-git/ ; git clean -d -x -q -f ; git pull --rebase upstream master ; scons --config=force platform=x11 -j 5 ; ./bin/godot.x11.tools.64* ; cd ~"
 
 
 alias tiled-git="cd ~/Documents/applikations/tiled-git/build/ ; ./bin/tiled ; cd ~"

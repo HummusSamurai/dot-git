@@ -1,0 +1,14 @@
+00 00 * * * /home/peace/bin/jeeb-all-timed-all
+00 01 * * * /home/peace/bin/jeeb-all-timed-all
+00 02 * * * /home/peace/bin/jeeb-all-timed-all
+00 03 * * * /home/peace/bin/jeeb-all-timed-all
+00 04 * * * /home/peace/bin/jeeb-all-timed-all
+00 05 * * * /home/peace/bin/jeeb-all-timed-all
+00 06 * * * /home/peace/bin/jeeb-all-timed-all
+00 07 * * * /home/peace/bin/jeeb-all-timed-all
+00 00 * * * su peace -c "DISPLAY=:0.0 /usr/bin/transmission-gtk"
+
+
+
+
+

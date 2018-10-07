@@ -1,0 +1,8 @@
+#!/bin/bash
+
+timeout 1h youtube-dl $(< ~/bin/media2dl.list)
+
+timeout 1h youtube-dl --ignore-config --download-archive ~/.config/youtube-dl/youtube_dl_archive.txt -o "~/Videos/youtube-dl/%(playlist)s/%(upload_date)s -- %(title)s.%(ext)s" $(< ~/bin/media2dl-a.list)
+
+timeout 1h youtube-dl --ignore-config --download-archive ~/.config/youtube-dl/youtube_dl_archive.txt -o "~/Videos/youtube-dl/%(playlist)s/%(upload_date)s -- %(title)s.%(ext)s" $(< ~/bin/media2dl-x.list)
+
